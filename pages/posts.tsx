@@ -1,15 +1,21 @@
 import { useEffect, useState } from 'react';
 import { MainLayout } from '../components/MainLayout';
 import Link from 'next/link';
+import { MyPost } from '../interfaces/post';
 
-export default function Posts({posts: serverPosts }) {
+interface PostsPageProps {
+    posts: MyPost[]
+}
+
+
+export default function Posts({posts: serverPosts }:PostsPageProps ){
     
     const [posts, setPosts] = useState(serverPosts);
 
     useEffect(() => {
         const load = async ()=> {
             const response = await fetch('http://localhost:4200/posts')
-        const data = await response.json()
+        const data : MyPost[] = await response.json()
         setPosts(data); 
         }
          
