@@ -2,17 +2,21 @@ import { useState, useEffect } from 'react';
 import { MainLayout } from '../../components/MainLayout';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
+import { MyPost } from '../../interfaces/post';
+import { NextPageContext } from 'next';
 
+interface PostPageProps {
+    post: MyPost
+}
 
-
-const Post =({post: serverPost }) => {
+const Post =({post: serverPost }: PostPageProps) => {
      
     const [post, setPost] = useState(serverPost); 
     
     const router = useRouter();
     useEffect(()=> {
         const load = async ()=>{
-            const response = await fetch(`http://localhost:4200/posts/${router.query.id}`)
+            const response = await fetch(`${process.env.API_URL}/posts/${router.query.id}`)
             const data = await response.json()
             setPost(data);
         }
@@ -39,19 +43,26 @@ const Post =({post: serverPost }) => {
 
 export default Post;
 
-// Post.getInitialProps = async ({query, req}) => {
-//     if(!req) {
-//         return {post: null}
-//     }
-//     const responce = await fetch(`http://localhost:4200/posts/${query.id}`)
-//     const post = await responce.json();
-//     return {
-//         post
-//     }
-// }
-
-export async function getServerSideProps({ query, req}) {
-    const responce = await fetch(`http://localhost:4200/posts/${query.id}`)
-    const post = await responce.json();
-    return {props:{post}}
+interface PostNextPageContext extends NextPageContext {
+    query: {
+        id: string
+    }
 }
+
+Post.getInitialProps = async ({query, req}:PostNextPageContext) => {
+    if(!req) {
+        return {post: null}
+    }
+        
+    const response = await fetch(`${process.env.API_URL}/posts/${query.id}`)
+    const post: MyPost = await response.json();
+    return {
+        post
+    }
+}
+
+// export async function getServerSideProps({ query, req}:NextPageContext) {
+//     const response = await fetch(`http://localhost:4200/posts/${query.id}`)
+//     const post = await response.json();
+//     return {props:{post}}
+// }

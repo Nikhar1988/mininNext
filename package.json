@@ -7,9 +7,10 @@
     "start": "next start",
     "lint": "next lint",
     "serve": "concurrently \"npm run dev\" \"npm run mock\"",
-    "mock": "json-server -w db.json -p 4200 -d 450"
+    "mock": "json-server -w db.json -p 4300 -d 450"
   },
   "dependencies": {
+    "dotenv": "^10.0.0",
     "next": "12.0.3",
     "nextjs-progressbar": "^0.0.13",
     "react": "17.0.2",
